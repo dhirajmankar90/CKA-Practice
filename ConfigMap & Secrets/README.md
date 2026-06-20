@@ -31,6 +31,26 @@ This project covers the following Kubernetes concepts:
 
 ## Project Components
 
+---
+
+## Browser Validation
+
+### ConfigMap-Powered Web Application
+
+As part of this exercise, a custom HTML webpage was stored within a Kubernetes ConfigMap and mounted into an Nginx container using a Volume Mount.
+
+The application was exposed externally through a NodePort Service and successfully accessed through a web browser. This validates:
+
+- ConfigMap consumption through Volumes
+- Static content delivery through Nginx
+- Service-to-Pod connectivity
+- NodePort Service exposure
+- End-to-end application accessibility
+
+### Application Output
+
+![Kubernetes Demo Application](images/configmap-demo-ui.png)
+
 ### ConfigMap
 
 The ConfigMap was used to store both application configuration and static web content.
@@ -183,6 +203,223 @@ The following validation steps were performed during the implementation:
 * Confirmed successful application delivery through Kubernetes networking components
 
 ---
+
+## Repository Structure
+
+The repository contains Kubernetes manifests demonstrating multiple approaches for working with ConfigMaps and Secrets. The files cover resource creation, workload deployment, service exposure, and configuration updates.
+
+```text
+ConfigMap & Secrets/
+│
+├── images/
+│   └── configmap-demo-ui.png
+│
+├── README.md
+├── cm.yaml
+├── cmupdated.yaml
+├── deployment-cm.yaml
+├── deployment-secret.yaml
+├── pod.yaml
+├── secret.yaml
+└── svc-cm.yaml
+```
+
+---
+
+## File Overview
+
+| File                   | Purpose                                                                                                                            |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| README.md              | Project documentation, implementation details, learning outcomes, validation steps, and best practices.                            |
+| cm.yaml                | Initial ConfigMap containing application configuration values and static HTML content used within the lab.                         |
+| cmupdated.yaml         | Updated version of the ConfigMap used to demonstrate configuration changes and update behavior.                                    |
+| deployment-cm.yaml     | Deployment consuming ConfigMap data through Environment Variables and Volume Mounts.                                               |
+| deployment-secret.yaml | Deployment consuming Secret data through Environment Variables and Volume Mounts.                                                  |
+| pod.yaml               | Standalone Pod manifest used to validate ConfigMap and Secret consumption before deploying workloads through Deployments.          |
+| secret.yaml            | Kubernetes Secret containing sensitive application data used throughout the lab exercises.                                         |
+| svc-cm.yaml            | NodePort Service used to expose the Nginx application externally and provide browser-based access to the ConfigMap-hosted webpage. |
+
+```
+```
+
+
+## Practical Kubernetes Commands Used
+
+The following kubectl commands were used throughout the implementation and validation of this lab.
+
+### Resource Deployment
+
+```bash
+kubectl apply -f <file-name>.yaml
+```
+
+Used to create and update Kubernetes resources from declarative manifests.
+
+### Resource Verification
+
+```bash
+kubectl get configmaps
+kubectl get secrets
+kubectl get deployments
+kubectl get pods
+kubectl get svc
+kubectl get endpoints
+```
+
+Used to verify successful creation of resources and validate application availability.
+
+### Resource Inspection
+
+```bash
+kubectl describe configmap <configmap-name>
+kubectl describe secret <secret-name>
+kubectl describe deployment <deployment-name>
+kubectl describe svc <service-name>
+```
+
+Used to inspect resource configuration and troubleshoot deployment issues.
+
+### Container Validation
+
+```bash
+kubectl exec <pod-name> -- printenv
+```
+
+Used to verify ConfigMap and Secret values injected as Environment Variables.
+
+```bash
+kubectl exec <pod-name> -- cat <file-path>
+```
+
+Used to verify ConfigMap and Secret data mounted as files within the container filesystem.
+
+### Deployment Management
+
+```bash
+kubectl rollout restart deployment <deployment-name>
+```
+
+Used to restart Pods and refresh application configuration after updates.
+
+### Troubleshooting
+
+```bash
+kubectl logs <pod-name>
+```
+
+Used to review container logs and troubleshoot application issues.
+
+---
+
+## Secret Encoding and Decoding
+
+Kubernetes Secrets store values as Base64-encoded data within manifest files.
+
+It is important to understand that Base64 encoding is not encryption. It simply converts data into a transport-friendly format and should not be considered a security mechanism by itself.
+
+### Encode a Secret Value
+
+```bash
+echo -n 'demogameuser' | base64
+```
+
+Example output:
+
+```text
+ZGVtb2dhbWV1c2Vy
+```
+
+### Decode a Secret Value
+
+```bash
+echo 'ZGVtb2dhbWV1c2Vy' | base64 --decode
+```
+
+Example output:
+
+```text
+demogameuser
+```
+
+### Security Considerations
+
+While Kubernetes Secrets provide a better mechanism for handling sensitive information than ConfigMaps, additional security controls should be considered in production environments:
+
+* Enable Encryption at Rest for Secrets stored in etcd
+* Restrict Secret access using RBAC
+* Avoid storing Secrets directly in source control repositories
+* Use external secret management platforms where appropriate
+* Follow the principle of least privilege for Secret access
+
+---
+
+## Validation Commands
+
+The following commands were used to validate successful implementation of ConfigMaps, Secrets, Deployments, Services, and mounted volumes.
+
+### Verify ConfigMap
+
+```bash
+kubectl get configmap
+kubectl describe configmap <configmap-name>
+```
+
+### Verify Secret
+
+```bash
+kubectl get secret
+kubectl describe secret <secret-name>
+```
+
+### Verify Deployment
+
+```bash
+kubectl get deployment
+kubectl describe deployment <deployment-name>
+```
+
+### Verify Pods
+
+```bash
+kubectl get pods
+kubectl describe pod <pod-name>
+```
+
+### Verify Services
+
+```bash
+kubectl get svc
+kubectl describe svc <service-name>
+```
+
+### Verify Service Endpoints
+
+```bash
+kubectl get endpoints
+```
+
+### Verify Environment Variables
+
+```bash
+kubectl exec <pod-name> -- printenv
+```
+
+### Verify Mounted Files
+
+```bash
+kubectl exec <pod-name> -- ls <mount-path>
+
+kubectl exec <pod-name> -- cat <mounted-file>
+```
+
+### Verify Application Accessibility
+
+```bash
+curl http://<node-ip>:<nodeport>
+```
+
+Or access the application directly through a browser using the NodePort Service endpoint.
+
 
 ## Key Learnings
 
