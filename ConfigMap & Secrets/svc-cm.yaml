@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: game-demo-svc  # Name of the service
+  namespace: game-demo-ns
+spec:
+  type: NodePort       # Exposes the service on a static port on each node
+  selector:
+    app: configmap-demo      # Targets pods with this label
+  ports:
+    - protocol: TCP
+      port: 80         # Port exposed inside the cluster (ClusterIP)
+      targetPort: 80   # Port the container is listening on
+      nodePort: 31000  # External port accessible on the node (must be between 30000–32767)

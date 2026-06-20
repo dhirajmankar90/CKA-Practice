@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: game-demo-cm
+  namespace: game-demo-ns
+
+data:
+  # Property-like keys
+  APP: "Demo Game"
+  LOG_LEVEL: "DEBUG"
+  ENV: "PRODUCTION"
+
+  # File-like key
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Kubernetes Demo Application</title>
+
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                background: linear-gradient(to right, #4facfe, #00f2fe);
+                color: white;
+                margin-top: 100px;
+            }
+
+            .container {
+                background: rgba(0, 0, 0, 0.2);
+                padding: 30px;
+                border-radius: 15px;
+                width: 60%;
+                margin: auto;
+                box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+            }
+
+            h1 {
+                color: #FFD700;
+            }
+
+            h2 {
+                color: #90EE90;
+            }
+
+            .footer {
+                margin-top: 20px;
+                font-size: 18px;
+                color: #f0f0f0;
+            }
+
+            .badge {
+                display: inline-block;
+                background-color: #ff5722;
+                padding: 10px 20px;
+                border-radius: 20px;
+                font-weight: bold;
+                margin-top: 15px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+
+            <h1>Kubernetes Demo Application</h1>
+
+            <h2>Successfully Deployed on Kubernetes</h2>
+
+            <p>
+                This webpage is being served from a Pod running inside my Kubernetes cluster.
+            </p>
+
+            <div class="badge">
+                Pod Status: Running
+            </div>
+
+            <p class="footer">
+                Powered by Kubernetes | Docker | Nginx
+            </p>
+
+            <p class="footer">
+                Created by Dhiraj Mankar
+            </p>
+
+        </div>
+    </body>
+    </html>
